@@ -3,10 +3,9 @@ import { createPinia } from 'pinia';
 import router from './router';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap'; 
-import { Splide, SplideSlide } from '@splidejs/vue-splide'
-import '@splidejs/vue-splide/css'
 
-
+import { Swiper, SwiperSlide } from "swiper/vue";
+import "swiper/css";
 // Main root component
 import App from './src/App.vue';
 
@@ -18,8 +17,9 @@ const app = createApp(App);
 
 // State management
 app.use(createPinia());
-app.component('Splide', Splide)
-app.component('SplideSlide', SplideSlide)
+
+app.component('Swiper', Swiper)
+app.component('SwiperSlide', SwiperSlide)
 // Router
 app.use(router);
 

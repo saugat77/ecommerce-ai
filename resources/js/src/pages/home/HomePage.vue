@@ -97,12 +97,19 @@ export default {
                     image: "https://picsum.photos/400/300?random=7"
                 },
                 {
+                    id: 9,
+                    name: "khatra",
+                    description: "High performance work laptop",
+                    price: 85000,
+                    image: "https://picsum.photos/400/300?random=9"
+                },
+                {
                     id: 8,
                     name: "Laptop",
                     description: "High performance work laptop",
                     price: 85000,
                     image: "https://picsum.photos/400/300?random=8"
-                }
+                }, 
             ],
             products: [
                 {
@@ -142,7 +149,7 @@ export default {
                 "hot": [
                     {
                         "id": 1,
-                        "name": "Wireless Noise Cancelling Headphones",
+                        "name": "Wireless Noise Cancelling",
                         "price": 2800,
                         "image": "https://picsum.photos/400/400?random=1",
                         "description": "Deep bass, premium sound quality",

@@ -1,116 +1,78 @@
 <template>
-    <div class="container py-4">
+  <div class="min-h-screen bg-[#f5f5f7] py-10">
 
-        <!-- HEADER -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="max-w-7xl mx-auto px-4">
 
-            <div>
-                <h3 class="fw-bold mb-1">Products</h3>
-                <p class="text-muted mb-0">Discover amazing deals</p>
-            </div>
+      <!-- HEADER -->
+      <div class="flex items-center justify-between mb-10">
 
+        <div>
+          <h1 class="text-4xl font-semibold tracking-tight text-black">
+            Products
+          </h1>
+
+          <p class="text-gray-500 mt-2 text-sm">
+            Discover amazing deals
+          </p>
         </div>
 
-        <!-- GRID -->
-       <div class="col-xl-3 col-lg-4 col-md-6" v-for="product in products" :key="product.id">
-
-  <div class="product-card h-full flex flex-col">
-
-    <!-- IMAGE (fixed height) -->
-    <div class="relative h-[220px] overflow-hidden">
-
-      <img
-        :src="product.image"
-        class="w-full h-full object-cover transition duration-300 hover:scale-105"
-      />
-
-      <span
-        class="absolute top-3 left-3 text-xs px-2 py-1 rounded-full text-white"
-        :class="tagClass(product.tag)"
-      >
-        {{ product.tag }}
-      </span>
-
-    </div>
-
-    <!-- BODY (fixed structure) -->
-    <div class="p-4 flex flex-col flex-1 justify-between">
-
-      <div>
-
-        <h3 class="text-base font-semibold text-gray-900 truncate">
-          {{ product.name }}
-        </h3>
-
-        <p class="text-sm text-gray-500 mt-1 line-clamp-2">
-          {{ product.description }}
-        </p>
-
       </div>
 
-      <!-- PRICE + BUTTON -->
-      <div class="flex items-center justify-between mt-4">
+      <!-- SWIPER -->
+      <Swiper :modules="[Autoplay]" :slides-per-view="4" :space-between="24" :breakpoints="breakpoints"
+        class="w-full min-h-[400px]" :grab-cursor="true" :loop="true" :autoplay="{
+          delay: 1500,
+          disableOnInteraction: false
+        }">
 
-        <span class="text-lg font-semibold text-gray-900">
-          Rs {{ product.price }}
-        </span>
+        <SwiperSlide v-for="product in products" :key="product.id" class="pb-4">
+          <ProductCard :product="product" @add-to-cart="addToCart" />
+        </SwiperSlide>
 
-        <button class="px-4 py-1.5 text-sm rounded-full bg-black text-white hover:bg-gray-800">
-          Add
-        </button>
-
-      </div>
+      </Swiper>
 
     </div>
 
   </div>
-
-</div>
-    </div>
 </template>
 
-<script>
-export default {
-    name: "ProductGrid",
+<script setup>
+import ProductCard from "../product/ProductCard.vue";
+import { useCartStore } from "../../../stores/cart.store";
+import { Autoplay } from "swiper/modules";
 
-    props: {
-        products: {
-            type: Array,
-            default: () => []
-        }
-    },
+// props
+defineProps({
+  products: {
+    type: Array,
+    default: () => []
+  }
+});
 
-    methods: {
-        tagClass(tag) {
-            switch (tag) {
-                case "Hot":
-                    return "bg-danger";
-                case "Popular":
-                    return "bg-primary";
-                case "Recent":
-                    return "bg-success";
-                case "On Sale":
-                    return "bg-warning text-dark";
-                default:
-                    return "bg-secondary";
-            }
-        }
-    }
+// cart store
+const cart = useCartStore();
+
+// add to cart
+const addToCart = async (product) => {
+  await cart.addToCart(product.id);
+};
+
+// responsive breakpoints
+const breakpoints = {
+  320: {
+    slidesPerView: 1.2
+  },
+
+  640: {
+    slidesPerView: 2
+  },
+
+  1024: {
+    slidesPerView: 3
+  },
+
+  1280: {
+    slidesPerView: 4
+  }
 };
 </script>
-
-<style scoped>
-.product-card {
-  background: #fff;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-  transition: 0.25s;
-  height: 100%;
-}
-
-.product-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.12);
-}
-</style>

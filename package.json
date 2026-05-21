@@ -13,12 +13,12 @@
         "vite": "^8.0.0"
     },
     "dependencies": {
-        "@splidejs/vue-splide": "^0.6.12",
         "@vitejs/plugin-vue": "^6.0.7",
         "axios": "^1.16.1",
         "bootstrap": "^5.3.8",
         "bootstrap-icons": "^1.13.1",
         "pinia": "^3.0.4",
+        "swiper": "^12.1.4",
         "tailwindcss": "^4.3.0",
         "vue-router": "^5.0.7"
     }

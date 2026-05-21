@@ -8,17 +8,19 @@ export const useCartStore = defineStore('cart', {
 
     actions: {
         async loadCart() {
-            const res = await http.get('/cart');
-            this.items = res.data.data;
+            // const res = await http.get('/cart');
+            // this.items = res.data.data;
         },
 
         async addToCart(productId) {
-            await http.post('/cart/add', {
-                product_id: productId,
-                quantity: 1
-            });
+            alert(productId);
+            // await http.post('/cart/add', {
+            //     product_id: productId,
+            //     quantity: 1
+            // });
 
-            await this.loadCart();
+            // await this.loadCart();
+
         }
     }
 });
