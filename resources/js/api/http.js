@@ -1,10 +1,21 @@
 import axios from 'axios';
 
 const http = axios.create({
-    baseURL: 'http://localhost:8000/api',
+    baseURL: 'http://127.0.0.1:8001/api',
     headers: {
         Accept: 'application/json'
     }
 });
+
+http.interceptors.request.use((config) => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+});
+
 
 export default http;

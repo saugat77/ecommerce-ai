@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class InventoryMovement extends Model
 {
-     protected $fillable = [
+    protected $fillable = [
         'store_id',
         'product_id',
         'type',

@@ -16,6 +16,8 @@
         <!-- FEATURED PRODUCTS -->
         <ProductGrid title="Featured Products" :products="featuredProducts" />
 
+        <Chatbox />
+
     </div>
 </template>
 
@@ -25,14 +27,15 @@ import TrendingSlider from '../../../src/components/common/TrendingSlider.vue'
 import BestSelling from '../../../src/components/common/BestSelling.vue'
 import OfferBanner from '../../../src/components/common/OfferBanner.vue'
 import ProductGrid from '../../../src/components/common/ProductGrid.vue'
-
+import Chatbox from '../../components/common/Chatbox.vue'
 export default {
     components: {
         HeroBanner,
         TrendingSlider,
         BestSelling,
         OfferBanner,
-        ProductGrid
+        ProductGrid,
+        Chatbox
     },
 
     data() {
