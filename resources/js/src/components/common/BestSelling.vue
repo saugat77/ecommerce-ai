@@ -54,57 +54,24 @@
 import { ref } from "vue";
 import ProductCard from "../product/ProductCard.vue";
 import { useCartStore } from "../../../stores/cart.store";
-
+import { ProductAPI } from "../../../api/product.api.js";
 import { Autoplay } from "swiper/modules";
+import { onMounted } from "vue";
 import "swiper/css";
 
 // cart
 const cart = useCartStore();
 
 // products
-const products = ref([
-  {
-    id: 1,
-    name: "AirPods Pro Max",
-    category: "Audio",
-    price: 45000,
-    description: "High-fidelity audio with noise cancellation.",
-    image: "https://images.unsplash.com/photo-1585386959984-a4155224a1ad"
-  },
-  {
-    id: 2,
-    name: "iPhone 15 Pro",
-    category: "Smartphone",
-    price: 180000,
-    description: "Titanium design with A17 Pro chip.",
-    image: "https://images.unsplash.com/photo-1696446706500-3b2f0c6e6f1c"
-  },
-  {
-    id: 3,
-    name: "MacBook Air M3",
-    category: "Laptop",
-    price: 220000,
-    description: "Ultra-light performance laptop.",
-    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8"
-  },
-  {
-    id: 4,
-    name: "Apple Watch Series 9",
-    category: "Wearable",
-    price: 65000,
-    description: "Advanced health tracking.",
-    image: "https://images.unsplash.com/photo-1434494878577-86c23bcb06b9"
-  },
-  {
-    id: 4,
-    name: "Apple Watch Series 9",
-    category: "Wearable",
-    price: 65000,
-    description: "Advanced health tracking.",
-    image: "https://images.unsplash.com/photo-1434494878577-86c23bcb06b9"
-  }
-]);
+const loadProducts = async (params = {}) => {
+    const res = await ProductAPI.list(params);
+    products.value = res.data.data;
+};
+const products = ref([]);
 
+onMounted(() => {
+    loadProducts({ type: 'best-selling' });
+});
 // breakpoints
 const breakpoints = {
   320: { slidesPerView: 1.2 },

@@ -6,9 +6,4 @@ export const ChatAPI = {
             message
         });
     },
-    ddhere(message) {
-        return http.get("/here", {
-            message
-        });
-    }
 };

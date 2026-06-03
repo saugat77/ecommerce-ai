@@ -12,9 +12,13 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $req)
     {
-        return Product::latest()->paginate(10);
+          $query = Product::query();
+           if ($req->type == 'best-selling') {
+                // $query->with('');
+            }
+        return $query->paginate(10);
     }
 
     /**

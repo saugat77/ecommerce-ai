@@ -101,12 +101,45 @@
 
                 <div v-for="(msg, i) in messages" :key="i" :class="msg.role === 'user' ? 'text-right' : 'text-left'">
 
-                    <span class="inline-block px-4 py-2 rounded-2xl text-sm" :class="msg.role === 'user'
+                    <!-- CHAT BUBBLE WRAPPER (COMMON FOR ALL) -->
+                    <div class="inline-block px-4 py-2 rounded-2xl text-sm max-w-md break-words" :class="msg.role === 'user'
                         ? 'bg-black text-white'
                         : 'bg-gray-100 text-gray-800'">
-                        {{ msg.text }}
-                    </span>
 
+                        <!-- TEXT MESSAGE -->
+                        <div v-if="msg.type === 'text'">
+                            {{ msg.text }}
+                        </div>
+
+                        <!-- PRODUCTS MESSAGE -->
+                        <div v-else-if="msg.type === 'products'" class="space-y-2">
+
+                            <!-- SUMMARY -->
+                            <div class="font-medium mb-2">
+                                {{ msg.summary }}
+                            </div>
+
+                            <!-- PRODUCT LIST -->
+                            <div v-for="p in msg.products" :key="p.id"
+                                class="bg-white text-black rounded-lg p-3 shadow-sm">
+
+                                <div class="font-semibold">
+                                    {{ p.name }}
+                                </div>
+
+                                <div class="text-xs text-gray-600">
+                                    💰Rs. {{ formatPrice(p.price) }} | 📦 {{ p.stock }} left
+                                </div>
+
+                                <div class="text-xs mt-1 text-gray-500">
+                                    {{ p.reason }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
                 </div>
 
             </div>
@@ -133,13 +166,14 @@
 <script setup>
 import { ref } from "vue";
 import { ChatAPI } from "../../../stores/chatAPi.js"; // <-- your API file
+import { formatPrice } from "../../utils/format";
 
 const open = ref(false);
 const input = ref("");
 const loading = ref(false);
 
 const messages = ref([
-    { role: "ai", text: "Hi 👋 I’m your AI shopping assistant. Ask me anything!" }
+    { role: "ai", type: 'text', text: "Hi 👋 I’m your AI shopping assistant. Ask me anything!" }
 ]);
 
 const send = async () => {
@@ -150,6 +184,7 @@ const send = async () => {
     // push user message instantly
     messages.value.push({
         role: "user",
+        type: 'text',
         text: userMessage
     });
 
@@ -159,11 +194,12 @@ const send = async () => {
     try {
         // call Laravel API (LLM)
         const res = await ChatAPI.sendMessage(userMessage);
-        const arko = await ChatAPI.ddhere()
-        console.log(arko);
+        console.log(res.data);
         messages.value.push({
             role: "ai",
-            text: res.data.reply
+            type: res.data.type,
+            summary: res.data.reply.summary,
+            products: res.data.reply.products
         });
 
     } catch (error) {

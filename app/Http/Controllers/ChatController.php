@@ -19,29 +19,46 @@ class ChatController extends Controller
             $message = $request->message;
 
             // 1. Search relevant products
-            $products = \App\Models\Product::where('name', 'like', "%$message%")
-                ->orWhere('description', 'like', "%$message%")
-                ->orWhere('category', 'like', "%$message%")
-                ->limit(5)
+           $products = \App\Models\Product::where('is_active', true)
+                ->limit(20)
                 ->get();
 
             // 2. Format product context
             $productContext = $products->map(function ($p) {
-                return "- {$p->name} | Price: {$p->price} | Category: {$p->category} | Stock: {$p->stock}";
-            })->implode("\n");
+              return "ID: {$p->id}
+            Name: {$p->name}
+            Price: {$p->price}
+            Stock: {$p->stock}
+            Discount: {$p->discount_amount}";
+            })->implode("\n\n");
 
             if ($productContext === '') {
                 $productContext = "No matching products found.";
             }
-
             // 3. Build system prompt
             $prompt = "
 You are an AI assistant for an e-commerce store.
+Format:
+{
+  \"summary\": \"short explanation\",
+  \"products\": [
+    {
+      \"id\": 0,
+      \"name\": \"\",
+      \"price\": 0,
+      \"discount\": 0,
+      \"stock\": 0,
+      \"reason\": \"\"
+    }
+  ]
+}
 
 Rules:
-- Answer ONLY using provided product data.
-- If data is missing, say 'I don't know based on available products'.
-- Be short and helpful.
+1. Understand user intent (best, cheap, premium, budget, etc.)
+2. Rank products accordingly
+3. Recommend ONLY from given list
+4. Return top 3 products with reason
+
 
 PRODUCT DATA:
 $productContext
@@ -53,9 +70,12 @@ $message
             // 4. Send to AI
             $response = $groq->chat($prompt);
 
+            $content = $response['choices'][0]['message']['content'];
+
+            $data = json_decode($content, true);
             return response()->json([
-                'reply' => $response['choices'][0]['message']['content'] ?? 'No response',
-                'products' => $products
+                'reply' => $data,
+                'type' => isset($data['products']) ? 'products' : 'text',
             ]);
         } catch (\Exception $e) {
             return response()->json([
